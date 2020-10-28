@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="dgtInnovation" id="Project_4951b7c" template="Default" database="SqlServer" >
+	<schema name="dgtInnovation" schemaname="dgtInnovation" >
+		<table name="Driver" >
+			<column name="Id" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="DNI" type="nvarchar" length="60" jt="12" mandatory="y" />
+			<column name="FirstName" type="nvarchar" length="60" jt="12" />
+			<column name="LastName" type="nvarchar" length="80" jt="12" />
+			<column name="TotalPoints" type="smallint" jt="5" />
+			<column name="LostPoints" type="smallint" jt="5" />
+			<column name="Status" type="bit" length="1" jt="-7" />
+			<index name="Pk_Driver_DriverId" unique="PRIMARY_KEY" >
+				<column name="Id" />
+			</index>
+		</table>
+		<table name="DriverInfringement" >
+			<column name="Id" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="DateCreated" type="datetime" jt="93" />
+			<column name="InfringementId" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="DriverId" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="PointDiscount" type="smallint" jt="5" mandatory="y" />
+			<column name="Status" type="bit" length="1" jt="-7" mandatory="y" />
+			<index name="Pk_DriverInfringement_DriverInfringementId" unique="PRIMARY_KEY" >
+				<column name="Id" />
+			</index>
+			<fk name="fk_driverinfringement" to_schema="dgtInnovation" to_table="Infringement" >
+				<fk_column name="InfringementId" pk="Id" />
+			</fk>
+			<fk name="fk_driverinfringement_driver" to_schema="dgtInnovation" to_table="Driver" >
+				<fk_column name="DriverId" pk="Id" />
+			</fk>
+		</table>
+		<table name="DriverVehicle" >
+			<column name="Id" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="DiverId" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="VehicleId" type="uniqueidentifier" jt="1" mandatory="y" />
+			<index name="Pk_DriverVehicle_DriverVehicleId" unique="PRIMARY_KEY" >
+				<column name="Id" />
+			</index>
+			<fk name="fk_drivervehicle_driver" to_schema="dgtInnovation" to_table="Driver" >
+				<fk_column name="DiverId" pk="Id" />
+			</fk>
+			<fk name="fk_drivervehicle_vehicles" to_schema="dgtInnovation" to_table="Vehicle" >
+				<fk_column name="VehicleId" pk="Id" />
+			</fk>
+		</table>
+		<table name="Infringement" >
+			<column name="Id" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="Description" type="nvarchar" length="120" jt="12" mandatory="y" />
+			<column name="Points_To_Discount" type="smallint" jt="5" mandatory="y" />
+			<column name="Status" type="bit" length="1" jt="-7" mandatory="y" />
+			<index name="Pk_infringement_infringementId" unique="PRIMARY_KEY" >
+				<column name="Id" />
+			</index>
+		</table>
+		<table name="Table" />
+		<table name="Table_0" />
+		<table name="Vehicle" >
+			<column name="Id" type="uniqueidentifier" jt="1" mandatory="y" />
+			<column name="Enrollment" type="nvarchar" length="15" jt="12" mandatory="y" />
+			<column name="Brand" type="nvarchar" length="50" jt="12" />
+			<column name="Model" type="nvarchar" length="50" jt="12" />
+			<column name="RegularDriver" type="uniqueidentifier" jt="1" />
+			<column name="Status" type="bit" length="1" jt="-7" />
+			<index name="Pk_Vehicles_Id" unique="PRIMARY_KEY" >
+				<column name="Id" />
+			</index>
+		</table>
+	</schema>
+	<connector name="SqlServer" database="SqlServer" host="localhost" port="1433" user="sa" passwd="Q29yczMzMDAyMDI2" />
+	<layout name="Default Layout" id="Layout_cb79a" joined_routing="y" show_column_type="y" show_relation="columns" >
+		<entity schema="dgtInnovation" name="DriverVehicle" color="C1D8EE" x="288" y="208" />
+		<entity schema="dgtInnovation" name="Infringement" color="C1D8EE" x="544" y="368" />
+		<entity schema="dgtInnovation" name="Driver" color="C1D8EE" x="48" y="48" />
+		<entity schema="dgtInnovation" name="Vehicle" color="C1D8EE" x="544" y="48" />
+		<entity schema="dgtInnovation" name="DriverInfringement" color="C1D8EE" x="48" y="368" />
+		<script name="SQL_Editor" id="Editor_368e411" language="SQL" >
+			<string><![CDATA[CREATE SCHEMA dgtInnovation;
+
+CREATE TABLE Driver ( 
+	Id                   uniqueidentifier NOT NULL   ,
+	DNI                  nvarchar(60) NOT NULL   ,
+	FirstName            nvarchar(60)    ,
+	LastName             nvarchar(80)    ,
+	TotalPoints          smallint    ,
+	LostPoints           smallint    ,
+	[Status]             bit    ,
+	CONSTRAINT Pk_Driver_DriverId PRIMARY KEY  ( Id )
+ );
+
+CREATE TABLE Infringement ( 
+	Id                   uniqueidentifier NOT NULL   ,
+	Description          nvarchar(120) NOT NULL   ,
+	Points_To_Discount   smallint NOT NULL   ,
+	[Status]             bit NOT NULL   ,
+	CONSTRAINT Pk_infringement_infringementId PRIMARY KEY  ( Id )
+ );
+
+CREATE TABLE [Table] ( 
+ );
+
+CREATE TABLE Table_0 ( 
+ );
+
+CREATE TABLE Vehicle ( 
+	Id                   uniqueidentifier NOT NULL   ,
+	Enrollment           nvarchar(15) NOT NULL   ,
+	Brand                nvarchar(50)    ,
+	Model                nvarchar(50)    ,
+	RegularDriver        uniqueidentifier    ,
+	[Status]             bit    ,
+	CONSTRAINT Pk_Vehicles_Id PRIMARY KEY  ( Id )
+ );
+
+CREATE TABLE DriverInfringement ( 
+	Id                   uniqueidentifier NOT NULL   ,
+	DateCreated          datetime    ,
+	InfringementId       uniqueidentifier NOT NULL   ,
+	DriverId             int NOT NULL   ,
+	PointDiscount        smallint NOT NULL   ,
+	[Status]             bit NOT NULL   ,
+	CONSTRAINT Pk_DriverInfringement_DriverInfringementId PRIMARY KEY  ( Id )
+ );
+
+CREATE TABLE DriverVehicle ( 
+	Id                   uniqueidentifier NOT NULL   ,
+	DiverId              uniqueidentifier NOT NULL   ,
+	VehicleId            uniqueidentifier NOT NULL   ,
+	CONSTRAINT Pk_DriverVehicle_DriverVehicleId PRIMARY KEY  ( Id )
+ );
+
+ALTER TABLE DriverInfringement ADD CONSTRAINT fk_driverinfringement FOREIGN KEY ( InfringementId ) REFERENCES Infringement( Id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE DriverInfringement ADD CONSTRAINT fk_driverinfringement_driver FOREIGN KEY ( DriverId ) REFERENCES Driver( Id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE DriverVehicle ADD CONSTRAINT fk_drivervehicle_driver FOREIGN KEY ( DiverId ) REFERENCES Driver( Id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE DriverVehicle ADD CONSTRAINT fk_drivervehicle_vehicles FOREIGN KEY ( VehicleId ) REFERENCES Vehicle( Id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+]]></string>
+		</script>
+	</layout>
+</project>
